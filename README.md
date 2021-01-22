@@ -1,6 +1,6 @@
 # salas-juntas-app
 
-Es un sistema basico de adminsitración de salas de juntas en una empresa. Este sistema contemplará un CRUD con stack MEAN con MySQL. <br />
+Es un sistema basico de administración de salas de juntas en una empresa. Este sistema contemplará un CRUD con stack MEAN con MySQL. <br />
 IMPORTANTE: Recuerda tener ya instalado NodeJS v12.18.0 y Angular Cli v10.0.2, tambien tener instalado MySQL server con la B.D. restaurada. <br />
 <br />
 BACKEND (Server) Instrucciones para correr el server: <br />

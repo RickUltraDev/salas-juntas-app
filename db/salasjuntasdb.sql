@@ -23,14 +23,14 @@ DROP TABLE IF EXISTS `empleado`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `empleado` (
-  `idEmpleado` int(11) NOT NULL,
+  `idEmpleado` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(60) NOT NULL,
   `ap_paterno` varchar(60) NOT NULL,
   `ap_materno` varchar(60) NOT NULL,
   `correo` varchar(70) NOT NULL,
   `contrasena` varchar(72) NOT NULL,
   PRIMARY KEY (`idEmpleado`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -39,6 +39,7 @@ CREATE TABLE `empleado` (
 
 LOCK TABLES `empleado` WRITE;
 /*!40000 ALTER TABLE `empleado` DISABLE KEYS */;
+INSERT INTO `empleado` VALUES (1,'Ricardo Enrique','Solis','Herrera','rick@gmail.com','12345r');
 /*!40000 ALTER TABLE `empleado` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -50,7 +51,7 @@ DROP TABLE IF EXISTS `reservacion`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `reservacion` (
-  `idReservacion` int(11) NOT NULL,
+  `idReservacion` int(11) NOT NULL AUTO_INCREMENT,
   `num_sala` int(11) NOT NULL,
   `fecha` date NOT NULL,
   `hora_inicial` time NOT NULL,
@@ -62,7 +63,7 @@ CREATE TABLE `reservacion` (
   PRIMARY KEY (`idReservacion`),
   KEY `fk_reservacion_empleado_idx` (`idEmpleado`),
   CONSTRAINT `fk_reservacion_empleado` FOREIGN KEY (`idEmpleado`) REFERENCES `empleado` (`idEmpleado`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -71,6 +72,7 @@ CREATE TABLE `reservacion` (
 
 LOCK TABLES `reservacion` WRITE;
 /*!40000 ALTER TABLE `reservacion` DISABLE KEYS */;
+INSERT INTO `reservacion` VALUES (1,1,'2021-02-27','10:00:00','12:00:00',4,'ag',1,1),(2,2,'2021-01-26','16:00:00','16:45:00',4,'ag',1,1),(3,4,'2021-01-26','16:00:00','16:45:00',3,'ag',1,1);
 /*!40000 ALTER TABLE `reservacion` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -91,4 +93,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-01-21 23:47:10
+-- Dump completed on 2021-01-22 12:33:39
