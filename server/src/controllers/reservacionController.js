@@ -8,7 +8,7 @@ async function getReservaciones(req, res) {
     var reservaciones = null;
     try {
         dbpool.getConnection(function (err, connection) {
-            dbpool.query("SELECT * FROM reservacion WHERE valido != 0", function (
+            dbpool.query("SELECT * FROM reservacion", function (
                 err,
                 results
             ) {
@@ -40,7 +40,7 @@ async function getReservacion(req, res) {
     var reservacion = null;
     try {
         dbpool.getConnection(function (err, connection) {
-            dbpool.query("SELECT * FROM reservacion WHERE valido != 0 AND idReservacion = ?", idReservacion, function (
+            dbpool.query("SELECT * FROM reservacion WHERE idReservacion = ?", idReservacion, function (
                 err,
                 results
             ) {
@@ -84,59 +84,143 @@ async function registrarReservacion(req, res) {
 
                 const { correo } = req.body;
                 let reservacion = {
-                    num_sala: req.body.num_sala,
                     fecha: req.body.fecha,
                     hora_inicial: req.body.hora_inicial,
                     hora_final: req.body.hora_final,
                     num_asistentes: req.body.num_asistentes,
-                    estado: 'ag',
-                    valido: 1,
-                    idEmpleado: null
+                    descripcion: req.body.descripcion,
+                    estado: 'oc',
+                    idUsuario: null,
+                    idSala: req.body.idSala
                 };
 
-                connection.query("SELECT idEmpleado FROM empleado WHERE correo = ?", correo, function (err, resultBD) {
-                    if (resultBD.length > 0) {
-                        reservacion.idEmpleado = resultBD[0].idEmpleado;
-
-                        connection.query("INSERT INTO reservacion SET ?", reservacion, function (err, result) {
-                            if (err) {
-                                console.log("Error " + err);
-                                connection.rollback(function () {
-                                    connection.release();
-                                    //Failure
-                                    res.status(500).send({
-                                        message: "Error"
-                                    });
-                                });
-                            }
-                            connection.commit(function (err) {
-                                if (err) {
-                                    console.log("Error " + err);
-                                    connection.rollback(function () {
-                                        connection.release();
-                                        //Failure
-                                        res.status(500).send({
-                                            message: "Error"
-                                        });
-                                    });
-                                } else {
-                                    connection.release();
-                                    //Success
-                                    res.status(200).send({
-                                        message: "Reservacion creada"
-                                    });
-                                }
-                            });
+                let horaFin = (new Date(reservacion.fecha+" "+reservacion.hora_final)).getTime();
+                let horaIn = (new Date(reservacion.fecha+" "+reservacion.hora_inicial)).getTime();
         
-                        }); //fin query 2
+                let tiempoReser = horaFin - horaIn;
+                
+                if(tiempoReser < 0 ){
+                    connection.release();
+                    res.status(400).send({
+                    message: "Horario mal ingresado"
+                    });
+                }else if(tiempoReser > 7200000){
+                    connection.release();
+                     res.status(400).send({
+                     message: "Horario excedido de dos horas"
+                     });
+                }else{
 
-                    }else{
-                       connection.release();
-                        res.status(404).send({
-                        message: "No existe el correo"
+                    connection.query("SELECT hora_inicial, hora_final FROM reservacion WHERE fecha = ?"+
+                    " AND idSala = ?", [reservacion.fecha, reservacion.idSala], function (err, resultBusq) {
+
+                        if (resultBusq.length > 0) {
+                            let horaFin = (new Date(reservacion.fecha+" "+reservacion.hora_final)).getTime();
+                            let horaIn = (new Date(reservacion.fecha+" "+reservacion.hora_inicial)).getTime();
+                            let horaFinBusq = (new Date(reservacion.fecha+" "+resultBusq[resultBusq.length-1].hora_final)).getTime();
+                            let horaInBusq = (new Date(reservacion.fecha+" "+resultBusq[resultBusq.length-1].hora_inicial)).getTime();
+                           
+                            if (horaIn === horaInBusq || horaIn > horaInBusq && horaIn < horaFinBusq ||
+                                horaFin > horaInBusq && horaFin < horaFinBusq){
+                                connection.release();
+                                res.status(400).send({
+                                message: "Sala ocupada a la hora elegida"});
+                                
+                                }else{
+                                    connection.query("SELECT idUsuario FROM usuario WHERE correo = ?", correo, function (err, resultBD) {
+                                        if (resultBD.length > 0) {
+                                            reservacion.idUsuario = resultBD[0].idUsuario;
+                
+                                            connection.query("INSERT INTO reservacion SET ?", reservacion, function (err, result) {
+                                                if (err) {
+                                                    console.log("Error " + err);
+                                                    connection.rollback(function () {
+                                                        connection.release();
+                                                        //Failure
+                                                        res.status(500).send({
+                                                            message: "Error"
+                                                        });
+                                                    });
+                                                }
+                                                connection.commit(function (err) {
+                                                    if (err) {
+                                                        console.log("Error " + err);
+                                                        connection.rollback(function () {
+                                                            connection.release();
+                                                            //Failure
+                                                            res.status(500).send({
+                                                                message: "Error"
+                                                            });
+                                                        });
+                                                    } else {
+                                                        connection.release();
+                                                        //Success
+                                                        res.status(200).send({
+                                                            message: "Reservacion creada"
+                                                        });
+                                                    }
+                                                });
+                            
+                                            }); //fin query 2
+                
+                                        }else{
+                                        connection.release();
+                                            res.status(404).send({
+                                            message: "No existe el correo del usuario"
+                                            });
+                                        }
+                                    }); //fin query 1
+                                
+                                }
+
+                            }else{
+                                connection.query("SELECT idUsuario FROM usuario WHERE correo = ?", correo, function (err, resultBD) {
+                                    if (resultBD.length > 0) {
+                                        reservacion.idUsuario = resultBD[0].idUsuario;
+            
+                                        connection.query("INSERT INTO reservacion SET ?", reservacion, function (err, result) {
+                                            if (err) {
+                                                console.log("Error " + err);
+                                                connection.rollback(function () {
+                                                    connection.release();
+                                                    //Failure
+                                                    res.status(500).send({
+                                                        message: "Error"
+                                                    });
+                                                });
+                                            }
+                                            connection.commit(function (err) {
+                                                if (err) {
+                                                    console.log("Error " + err);
+                                                    connection.rollback(function () {
+                                                        connection.release();
+                                                        //Failure
+                                                        res.status(500).send({
+                                                            message: "Error"
+                                                        });
+                                                    });
+                                                } else {
+                                                    connection.release();
+                                                    //Success
+                                                    res.status(200).send({
+                                                        message: "Reservacion creada"
+                                                    });
+                                                }
+                                            });
+                        
+                                        }); //fin query 2
+            
+                                    }else{
+                                    connection.release();
+                                        res.status(404).send({
+                                        message: "No existe el correo del usuario"
+                                        });
+                                    }
+                                }); //fin query 1
+                            }
                         });
-                    }
-                }); //fin query 1
+
+                }
                
             }
 
@@ -145,7 +229,7 @@ async function registrarReservacion(req, res) {
     });
 }
 
-/* Función para dar de baja logica una reservacion de una sala especifica */
+/* Función para dar de baja fisica una reservacion de una sala especifica */
 async function eliminarReservacion(req, res) {
     
     const { idReservacion } = req.params;
@@ -164,7 +248,7 @@ async function eliminarReservacion(req, res) {
                 });
             } else {
 
-                connection.query("UPDATE reservacion SET valido = 0 WHERE idReservacion = ?", idReservacion, function (err, result) {
+                connection.query("DELETE FROM reservacion WHERE idReservacion = ?", idReservacion, function (err, result) {
                     if (err) {
                         console.log("Error " + err);
                         connection.rollback(function () {
@@ -225,59 +309,201 @@ async function actualizarReservacion(req, res) {
 
                 const { correo } = req.body;
                 let reservacion = {
-                    num_sala: req.body.num_sala,
                     fecha: req.body.fecha,
                     hora_inicial: req.body.hora_inicial,
                     hora_final: req.body.hora_final,
                     num_asistentes: req.body.num_asistentes,
-                    valido: 1,
-                    idEmpleado: null
+                    descripcion: req.body.descripcion,
+                    idUsuario: null,
+                    idSala: req.body.idSala
                 };
 
-                connection.query("SELECT idEmpleado FROM empleado WHERE correo = ?", correo, function (err, resultBD) {
-                    if (resultBD.length > 0) {
-                        reservacion.idEmpleado = resultBD[0].idEmpleado;
-
-                        connection.query("UPDATE reservacion SET ? WHERE idReservacion = ?", [reservacion, idReservacion], function (err, result) {
-                            if (err) {
-                                console.log("Error " + err);
-                                connection.rollback(function () {
-                                    connection.release();
-                                    //Failure
-                                    res.status(500).send({
-                                        message: "Error"
-                                    });
-                                });
-                            }
-                            connection.commit(function (err) {
-                                if (err) {
-                                    console.log("Error " + err);
-                                    connection.rollback(function () {
-                                        connection.release();
-                                        //Failure
-                                        res.status(500).send({
-                                            message: "Error"
-                                        });
-                                    });
-                                } else {
-                                    connection.release();
-                                    //Success
-                                    res.status(200).send({
-                                        message: "Reservacion actualizada"
-                                    });
-                                }
-                            });
+                let horaFin = (new Date(reservacion.fecha+" "+reservacion.hora_final)).getTime();
+                let horaIn = (new Date(reservacion.fecha+" "+reservacion.hora_inicial)).getTime();
         
-                        }); //fin query 2
+                let tiempoReser = horaFin - horaIn;
+                
+                if(tiempoReser < 0 ){
+                    connection.release();
+                    res.status(400).send({
+                    message: "Horario mal ingresado"
+                    });
+                }else if(tiempoReser > 7200000){
+                    connection.release();
+                     res.status(400).send({
+                     message: "Horario excedido de dos horas"
+                     });
+                }else{
 
-                    }else{
-                       connection.release();
-                        res.status(404).send({
-                        message: "No existe el correo"
+                    connection.query("SELECT hora_inicial, hora_final FROM reservacion WHERE fecha = ?"+
+                    " AND idSala = ?", [reservacion.fecha, reservacion.idSala], function (err, resultBusq) {
+
+                        if (resultBusq.length > 0) {
+                            let horaFin = (new Date(reservacion.fecha+" "+reservacion.hora_final)).getTime();
+                            let horaIn = (new Date(reservacion.fecha+" "+reservacion.hora_inicial)).getTime();
+                            let horaFinBusq = (new Date(reservacion.fecha+" "+resultBusq[resultBusq.length-1].hora_final)).getTime();
+                            let horaInBusq = (new Date(reservacion.fecha+" "+resultBusq[resultBusq.length-1].hora_inicial)).getTime();
+                           
+                            if (horaIn === horaInBusq || horaIn > horaInBusq && horaIn < horaFinBusq ||
+                                horaFin > horaInBusq && horaFin < horaFinBusq){
+                                connection.release();
+                                res.status(400).send({
+                                message: "Sala ocupada a la hora elegida"});
+                                
+                                }else{
+                                    connection.query("SELECT idUsuario FROM usuario WHERE correo = ?", correo, function (err, resultBD) {
+                                        if (resultBD.length > 0) {
+                                            reservacion.idUsuario = resultBD[0].idUsuario;
+                
+                                            connection.query("UPDATE reservacion SET ? WHERE idReservacion = ?", [reservacion, idReservacion], function (err, result) {
+                                                if (err) {
+                                                    console.log("Error " + err);
+                                                    connection.rollback(function () {
+                                                        connection.release();
+                                                        //Failure
+                                                        res.status(500).send({
+                                                            message: "Error"
+                                                        });
+                                                    });
+                                                }
+                                                connection.commit(function (err) {
+                                                    if (err) {
+                                                        console.log("Error " + err);
+                                                        connection.rollback(function () {
+                                                            connection.release();
+                                                            //Failure
+                                                            res.status(500).send({
+                                                                message: "Error"
+                                                            });
+                                                        });
+                                                    } else {
+                                                        connection.release();
+                                                        //Success
+                                                        res.status(200).send({
+                                                            message: "Reservacion actualizada"
+                                                        });
+                                                    }
+                                                });
+                            
+                                            }); //fin query 2
+                
+                                        }else{
+                                        connection.release();
+                                            res.status(404).send({
+                                            message: "No existe el correo del usuario"
+                                            });
+                                        }
+                                    }); //fin query 1
+                                
+                                }
+
+                            }else{
+                                connection.query("SELECT idUsuario FROM usuario WHERE correo = ?", correo, function (err, resultBD) {
+                                    if (resultBD.length > 0) {
+                                        reservacion.idUsuario = resultBD[0].idUsuario;
+            
+                                        connection.query("UPDATE reservacion SET ? WHERE idReservacion = ?", [reservacion, idReservacion], function (err, result) {
+                                            if (err) {
+                                                console.log("Error " + err);
+                                                connection.rollback(function () {
+                                                    connection.release();
+                                                    //Failure
+                                                    res.status(500).send({
+                                                        message: "Error"
+                                                    });
+                                                });
+                                            }
+                                            connection.commit(function (err) {
+                                                if (err) {
+                                                    console.log("Error " + err);
+                                                    connection.rollback(function () {
+                                                        connection.release();
+                                                        //Failure
+                                                        res.status(500).send({
+                                                            message: "Error"
+                                                        });
+                                                    });
+                                                } else {
+                                                    connection.release();
+                                                    //Success
+                                                    res.status(200).send({
+                                                        message: "Reservacion actualizada"
+                                                    });
+                                                }
+                                            });
+                        
+                                        }); //fin query 2
+            
+                                    }else{
+                                    connection.release();
+                                        res.status(404).send({
+                                        message: "No existe el correo del usuario"
+                                        });
+                                    }
+                                }); //fin query 1
+                            }
+                        });
+
+                }
+               
+            }
+
+        }); //fin conexión
+
+    });
+}
+
+/* Función para finalizar una reservacion de una sala especifica */
+async function finalizarReservacion(req, res){
+    const { idReservacion } = req.params;
+ 
+    dbpool.getConnection(function (err, connection) {
+        /* Begin transaction */
+        connection.beginTransaction(function (err) {
+            if (err) {
+                console.log("Error " + err);
+                connection.rollback(function () {
+                    connection.release();
+                    //Failure
+                    res.status(500).send({
+                        message: "Error"
+                    });
+                });
+            } else {
+                connection.query("UPDATE reservacion SET estado = 'li' WHERE idReservacion = ?",  idReservacion, function (err, result) {
+                    if (err) {
+                        console.log("Error " + err);
+                        connection.rollback(function () {
+                            connection.release();
+                            //Failure
+                            res.status(500).send({
+                                message: "Error"
+                            });
                         });
                     }
-                }); //fin query 1
-               
+
+
+                    connection.commit(function (err) {
+                        if (err) {
+                            console.log("Error " + err);
+                            connection.rollback(function () {
+                                connection.release();
+                                //Failure
+                                res.status(500).send({
+                                    message: "Error"
+                                });
+                            });
+                        } else {
+                            connection.release();
+                            //Success
+                            res.status(200).send({
+                                message: "Reservacion finalizada"
+                            });
+                        }
+
+                    });
+
+                }); //fin query
             }
 
         }); //fin conexión
@@ -290,5 +516,6 @@ module.exports = {
     getReservacion,
     registrarReservacion,
     eliminarReservacion,
-    actualizarReservacion
+    actualizarReservacion, 
+    finalizarReservacion
 }

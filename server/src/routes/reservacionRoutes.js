@@ -11,6 +11,6 @@ router.get("/:idReservacion", reservacionController.getReservacion);
 router.post("/registro", reservacionController.registrarReservacion);
 router.delete("/elimina/:idReservacion",reservacionController.eliminarReservacion);
 router.put("/actualiza/:idReservacion",reservacionController.actualizarReservacion);
-
+router.put("/finaliza/:idReservacion",reservacionController.finalizarReservacion);
 
 module.exports = router;

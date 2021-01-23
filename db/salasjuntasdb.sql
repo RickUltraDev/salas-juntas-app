@@ -16,34 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `empleado`
---
-
-DROP TABLE IF EXISTS `empleado`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `empleado` (
-  `idEmpleado` int(11) NOT NULL AUTO_INCREMENT,
-  `nombre` varchar(60) NOT NULL,
-  `ap_paterno` varchar(60) NOT NULL,
-  `ap_materno` varchar(60) NOT NULL,
-  `correo` varchar(70) NOT NULL,
-  `contrasena` varchar(72) NOT NULL,
-  PRIMARY KEY (`idEmpleado`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `empleado`
---
-
-LOCK TABLES `empleado` WRITE;
-/*!40000 ALTER TABLE `empleado` DISABLE KEYS */;
-INSERT INTO `empleado` VALUES (1,'Ricardo Enrique','Solis','Herrera','rick@gmail.com','12345r');
-/*!40000 ALTER TABLE `empleado` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `reservacion`
 --
 
@@ -52,18 +24,20 @@ DROP TABLE IF EXISTS `reservacion`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `reservacion` (
   `idReservacion` int(11) NOT NULL AUTO_INCREMENT,
-  `num_sala` int(11) NOT NULL,
   `fecha` date NOT NULL,
   `hora_inicial` time NOT NULL,
   `hora_final` time NOT NULL,
   `num_asistentes` int(11) NOT NULL,
-  `estado` varchar(2) NOT NULL COMMENT 'ag- agendada, en- en proceso, fi - finalizada',
-  `valido` tinyint(4) NOT NULL COMMENT '0 - invalida, 1 - valida',
-  `idEmpleado` int(11) NOT NULL,
+  `descripcion` mediumtext NOT NULL COMMENT 'Ejemplo ''Junta de consejo'', ''Junta con un cliente'', ''Scrum daily coco app''',
+  `estado` varchar(2) NOT NULL COMMENT 'ag- agendada, oc - ocupado, li - libre',
+  `idUsuario` int(11) NOT NULL,
+  `idSala` int(11) NOT NULL,
   PRIMARY KEY (`idReservacion`),
-  KEY `fk_reservacion_empleado_idx` (`idEmpleado`),
-  CONSTRAINT `fk_reservacion_empleado` FOREIGN KEY (`idEmpleado`) REFERENCES `empleado` (`idEmpleado`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  KEY `fk_reservacion_empleado_idx` (`idUsuario`),
+  KEY `fk_reservacion_sala1_idx` (`idSala`),
+  CONSTRAINT `fk_reservacion_sala` FOREIGN KEY (`idSala`) REFERENCES `sala` (`idSala`),
+  CONSTRAINT `fk_reservacion_usuario` FOREIGN KEY (`idUsuario`) REFERENCES `usuario` (`idUsuario`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -72,8 +46,61 @@ CREATE TABLE `reservacion` (
 
 LOCK TABLES `reservacion` WRITE;
 /*!40000 ALTER TABLE `reservacion` DISABLE KEYS */;
-INSERT INTO `reservacion` VALUES (1,1,'2021-02-27','10:00:00','12:00:00',4,'ag',1,1),(2,2,'2021-01-26','16:00:00','16:45:00',4,'ag',1,1),(3,4,'2021-01-26','16:00:00','16:45:00',3,'ag',1,1);
+INSERT INTO `reservacion` VALUES (1,'2021-01-26','10:00:00','12:00:00',4,'Team Meeting','oc',1,1),(2,'2021-01-26','22:00:00','23:00:00',4,'Junta con clientes','oc',1,1);
 /*!40000 ALTER TABLE `reservacion` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `sala`
+--
+
+DROP TABLE IF EXISTS `sala`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sala` (
+  `idSala` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(70) NOT NULL,
+  `num_piso` int(11) NOT NULL,
+  PRIMARY KEY (`idSala`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `sala`
+--
+
+LOCK TABLES `sala` WRITE;
+/*!40000 ALTER TABLE `sala` DISABLE KEYS */;
+INSERT INTO `sala` VALUES (1,'Everest',1),(2,'Himalaya',2);
+/*!40000 ALTER TABLE `sala` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `usuario`
+--
+
+DROP TABLE IF EXISTS `usuario`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `usuario` (
+  `idUsuario` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(60) NOT NULL,
+  `ap_paterno` varchar(60) NOT NULL,
+  `ap_materno` varchar(60) NOT NULL,
+  `correo` varchar(70) NOT NULL,
+  `contrasena` varchar(72) NOT NULL,
+  PRIMARY KEY (`idUsuario`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `usuario`
+--
+
+LOCK TABLES `usuario` WRITE;
+/*!40000 ALTER TABLE `usuario` DISABLE KEYS */;
+INSERT INTO `usuario` VALUES (1,'Ricardo Enrique','Solis','Herrera','rick@gmail.com','12345r');
+/*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -93,4 +120,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-01-22 12:33:39
+-- Dump completed on 2021-01-23  1:58:23
