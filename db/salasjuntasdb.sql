@@ -46,7 +46,7 @@ CREATE TABLE `reservacion` (
 
 LOCK TABLES `reservacion` WRITE;
 /*!40000 ALTER TABLE `reservacion` DISABLE KEYS */;
-INSERT INTO `reservacion` VALUES (1,'2021-01-26','10:00:00','12:00:00',4,'Team Meeting','oc',1,1),(2,'2021-01-26','22:00:00','23:00:00',4,'Junta con clientes','oc',1,1);
+INSERT INTO `reservacion` VALUES (1,'2021-01-26','10:00:00','12:00:00',4,'Team Meeting','li',1,1),(2,'2021-01-26','22:00:00','23:00:00',4,'Junta con clientes','oc',1,1);
 /*!40000 ALTER TABLE `reservacion` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -61,8 +61,9 @@ CREATE TABLE `sala` (
   `idSala` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(70) NOT NULL,
   `num_piso` int(11) NOT NULL,
+  `valido` tinyint(4) NOT NULL,
   PRIMARY KEY (`idSala`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -71,7 +72,7 @@ CREATE TABLE `sala` (
 
 LOCK TABLES `sala` WRITE;
 /*!40000 ALTER TABLE `sala` DISABLE KEYS */;
-INSERT INTO `sala` VALUES (1,'Everest',1),(2,'Himalaya',2);
+INSERT INTO `sala` VALUES (1,'Everest',1,1),(2,'Picacho',2,1),(3,'Pico de orizaba',2,1);
 /*!40000 ALTER TABLE `sala` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -99,7 +100,7 @@ CREATE TABLE `usuario` (
 
 LOCK TABLES `usuario` WRITE;
 /*!40000 ALTER TABLE `usuario` DISABLE KEYS */;
-INSERT INTO `usuario` VALUES (1,'Ricardo Enrique','Solis','Herrera','rick@gmail.com','12345r');
+INSERT INTO `usuario` VALUES (1,'Ricardo Enrique','Solis','Herrera','rick@gmail.com','\'$2b$10$uMfzArkt2LEfnFRauprj1e5UUztHJLXiwjd7iR6xX1As5cfv.XId6\'');
 /*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -120,4 +121,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-01-23  1:58:23
+-- Dump completed on 2021-01-23 13:46:42

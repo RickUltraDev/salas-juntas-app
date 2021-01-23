@@ -111,7 +111,7 @@ async function registrarReservacion(req, res) {
                      });
                 }else{
 
-                    connection.query("SELECT hora_inicial, hora_final FROM reservacion WHERE fecha = ?"+
+                    connection.query("SELECT hora_inicial, hora_final, estado FROM reservacion WHERE fecha = ?"+
                     " AND idSala = ?", [reservacion.fecha, reservacion.idSala], function (err, resultBusq) {
 
                         if (resultBusq.length > 0) {
@@ -119,8 +119,9 @@ async function registrarReservacion(req, res) {
                             let horaIn = (new Date(reservacion.fecha+" "+reservacion.hora_inicial)).getTime();
                             let horaFinBusq = (new Date(reservacion.fecha+" "+resultBusq[resultBusq.length-1].hora_final)).getTime();
                             let horaInBusq = (new Date(reservacion.fecha+" "+resultBusq[resultBusq.length-1].hora_inicial)).getTime();
-                           
-                            if (horaIn === horaInBusq || horaIn > horaInBusq && horaIn < horaFinBusq ||
+                            
+                            if (resultBusq[0].estado === 'oc' || horaIn === horaInBusq 
+                            || horaIn > horaInBusq && horaIn < horaFinBusq ||
                                 horaFin > horaInBusq && horaFin < horaFinBusq){
                                 connection.release();
                                 res.status(400).send({

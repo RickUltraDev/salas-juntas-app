@@ -21,7 +21,9 @@ app.get("/", async (req, res) => {
 
 /* Rutas de conexiones */
 /* Nota: Todas las rutas tendran un prefijo 'api' que se le añadirá a la ruta */
+app.use("/api/sala",require("./routes/salaRoutes"));
 app.use("/api/reservacion",require("./routes/reservacionRoutes"));
+app.use("/api/usuario",require("./routes/usuarioRoutes"));
 
 /* Inciar la conexión con el server*/
 app.set("port", 3000 | process.env.connection);
