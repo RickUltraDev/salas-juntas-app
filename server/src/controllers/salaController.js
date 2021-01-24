@@ -85,6 +85,9 @@ async function registrarSala(req, res){
                 let sala = {
                     nombre: req.body.nombre,
                     num_piso: req.body.num_piso,
+                    capacidad_max: req.body.capacidad_max,
+                    hora_disp_inicial: req.body.hora_disp_inicial,
+                    hora_disp_final: req.body.hora_disp_final,
                     valido: 1
                 };
 
@@ -212,6 +215,9 @@ async function actualizarSala(req, res){
                 let sala = {
                     nombre: req.body.nombre,
                     num_piso: req.body.num_piso,
+                    capacidad_max: req.body.capacidad_max,
+                    hora_disp_inicial: req.body.hora_disp_inicial,
+                    hora_disp_final: req.body.hora_disp_final,
                     valido: 1
                 };
 

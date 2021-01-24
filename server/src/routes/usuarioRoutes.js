@@ -7,7 +7,7 @@ const usuarioController = require('../controllers/usuarioController');
 
 /* Rutas registradas */
 router.post("/registro", usuarioController.registrarUsuario); 
-router.get("/busqueda", usuarioController.buscarUsuario);
+router.get("/", usuarioController.getUsuarios);
 
 
 module.exports = router;

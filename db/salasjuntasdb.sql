@@ -61,6 +61,9 @@ CREATE TABLE `sala` (
   `idSala` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(70) NOT NULL,
   `num_piso` int(11) NOT NULL,
+  `capacidad_max` int(11) NOT NULL,
+  `hora_disp_inicial` time NOT NULL,
+  `hora_disp_final` time NOT NULL,
   `valido` tinyint(4) NOT NULL,
   PRIMARY KEY (`idSala`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -72,7 +75,7 @@ CREATE TABLE `sala` (
 
 LOCK TABLES `sala` WRITE;
 /*!40000 ALTER TABLE `sala` DISABLE KEYS */;
-INSERT INTO `sala` VALUES (1,'Everest',1,1),(2,'Picacho',2,1),(3,'Pico de orizaba',2,1);
+INSERT INTO `sala` VALUES (1,'Everest',1,10,'08:00:00','15:00:00',1),(2,'Picacho',2,15,'10:00:00','20:00:00',1),(3,'Pico de orizaba',2,20,'08:00:00','21:00:00',1);
 /*!40000 ALTER TABLE `sala` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -121,4 +124,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-01-23 13:46:42
+-- Dump completed on 2021-01-24 16:16:09

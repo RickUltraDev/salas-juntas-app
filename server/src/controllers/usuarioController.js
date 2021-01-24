@@ -93,26 +93,26 @@ async function registrarUsuario(req, res){
     });
 }
 
-/* Función para buscar un usuario registrado por su correo electronico */
-async function buscarUsuario(req, res){
-    const { correo } = req.body;
-    var usuario = null;
+/* Función para mostrar todos los usuarios registrados */
+async function getUsuarios(req, res){
+
+    var usuarios = null;
     try {
         dbpool.getConnection(function (err, connection) {
-            dbpool.query("SELECT * FROM usuario WHERE correo = ?", correo, function (
+            dbpool.query("SELECT nombre, ap_paterno, ap_materno, correo FROM usuario", function (
                 err,
                 results
             ) {
-                usuario = results[0];
-                if (usuario != null) {
+                usuarios = results;
+                if (usuarios != null) {
                     res.status(200).send({
-                        message: "Encontrado",
-                        Json: usuario
+                        message: "Encontrados",
+                        JsonArray: usuarios
                     });
                 } else {
                     res.status(404).send({
-                        message: "No Encontrado",
-                        Json: usuario
+                        message: "No Encontrados",
+                        JsonArray: usuarios
                     });
                 }
 
@@ -127,5 +127,5 @@ async function buscarUsuario(req, res){
 
 module.exports = {
     registrarUsuario,
-    buscarUsuario
+    getUsuarios
 }
