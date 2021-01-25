@@ -17,6 +17,7 @@ import { faSearch, faExclamationCircle, faFileSignature,
 
 //Servicios que usará el componente
 import { ReservacionService } from '../../../services/reservacion.service';
+import { SalaService } from '../../../services/sala.service';
 
 //Modelos que usará el componente
 import { ModelReservacion } from 'src/app/models/ModelReservacion';
@@ -70,6 +71,9 @@ export class ReservacionManejoComponent implements OnInit, AfterViewInit {
 
   //Formulario a usar
   editarForm: FormGroup; 
+  //Formulario a usar
+  public Reservacion: ModelReservacion;
+  listaSalas: any = [];
 
   constructor(
     private titleService: Title,
@@ -78,10 +82,25 @@ export class ReservacionManejoComponent implements OnInit, AfterViewInit {
     private builder: FormBuilder,
     private toastr: ToastrService,
     private reservacionService: ReservacionService,
+    private salaService: SalaService,
     private modalService: NgbModal
   ) { 
     //Asigna los datos a la lista data source para el renderizado de la tabla
     this.dataSource = new MatTableDataSource(this.listaReserv);
+
+    this.editarForm = this.builder.group({
+      fecha: ["", Validators.required], 
+      hora_inicial: ["", Validators.required], 
+      hora_final: ["", Validators.required],
+      num_asistentes:[null ,[Validators.required,Validators.min(1),Validators.max(50)]],
+      asunto: ["", [Validators.required, Validators.minLength(2), Validators.maxLength(40)]],
+      correoUsuario: [null],
+      idSala: [null, Validators.required],
+    });
+
+    this.Reservacion = new ModelReservacion();
+    this.Reservacion.idSala = null;
+    this.editarForm.setValue(this.Reservacion);
 
   }
 
@@ -89,6 +108,7 @@ export class ReservacionManejoComponent implements OnInit, AfterViewInit {
     this.spinner();
     this.titleService.setTitle(this.title);
     this.cargarReservaciones();
+    this.cargarSalas();
   }
 
   ngAfterViewInit() {
@@ -112,6 +132,22 @@ export class ReservacionManejoComponent implements OnInit, AfterViewInit {
       this.spinnerService.hide();
     }, 500);
   }
+
+   //Funcion para cargar las salas desde el backend atraves de un servicio
+   cargarSalas() {
+    return this.salaService.getMuestraSalas().subscribe(
+      (resp: any) => {
+        this.listaSalas = resp['JsonArray'];
+      },
+      (error: any) => {
+        if (error.status == 404) {
+         this.listaSalas = [];
+        } else {
+          this.toastr.error('Error en la aplicación', 'Error');
+          this.router.navigate(['/home']);
+        }
+      });
+   }
 
    //Funciones en modales
    openDetalles(contentDetalles) {
@@ -145,6 +181,25 @@ export class ReservacionManejoComponent implements OnInit, AfterViewInit {
           this.closeResult = `Closed with: ${result}`;
         },
         (reason) => {
+          this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+        }
+      );
+  }
+
+  openEditar(contentEditar, idReservacion: number, Reservacion: ModelReservacion) {
+    this.modalService
+      .open(contentEditar, {
+        size: 'lg',
+        scrollable: true,
+        ariaLabelledBy: 'modal-basic-title',
+      })
+      .result.then(
+        (result) => {
+          this.editarReservacion(idReservacion, Reservacion);          
+          this.closeResult = `Closed with: ${result}`;
+        },
+        (reason) => {
+           this.cargarReservaciones();
           this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
         }
       );
@@ -212,6 +267,25 @@ export class ReservacionManejoComponent implements OnInit, AfterViewInit {
         }
       );
     }
+
+     //Funcion para editar una reservacion y enviarla al backend
+   editarReservacion(idReservacion: number, Reservacion: ModelReservacion){
+
+    return this.reservacionService.putEditarReservacion(idReservacion, Reservacion).subscribe(
+      (resp: any) => {
+        this.toastr.success('Se han guardado los cambios de la reservacion', 'Cambio exitoso');
+        this.cargarReservaciones();
+      },(err: any) =>{
+        if (err.status === 400) {
+          this.toastr.warning(err.error.message, 'No se guardo el cambio');
+        }else if(err.status === 404) {
+          this.toastr.warning(err.error.message, 'No se guardo el cambio');
+        } else {
+          this.toastr.error('Error en la aplicación.', 'Error');
+          this.router.navigate(['/home']);
+        }
+      });
+  }
 
     //Funcion para eliminar una reservacion registrada
     finalizarReservacion(idReservacion: number){  

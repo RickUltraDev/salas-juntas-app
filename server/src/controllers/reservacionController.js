@@ -175,7 +175,7 @@ async function registrarReservacion(req, res) {
                                 }
 
                             }else{
-                                connection.query("SELECT idUsuario FROM usuario WHERE correo = ?", correo, function (err, resultBD) {
+                                connection.query("SELECT idUsuario FROM usuario WHERE correo = ?", correoUsuario, function (err, resultBD) {
                                     if (resultBD.length > 0) {
                                         reservacion.idUsuario = resultBD[0].idUsuario;
             
@@ -315,7 +315,7 @@ async function actualizarReservacion(req, res) {
                     hora_final: req.body.hora_final,
                     num_asistentes: req.body.num_asistentes,
                     asunto: req.body.asunto,
-                    idUsuario: null,
+                    idUsuario: req.body.idUsuario,
                     idSala: req.body.idSala
                 };
 
@@ -352,10 +352,6 @@ async function actualizarReservacion(req, res) {
                                 message: "Sala ocupada a la hora elegida"});
                                 
                                 }else{
-                                    connection.query("SELECT idUsuario FROM usuario WHERE correo = ?", correoUsuario, function (err, resultBD) {
-                                        if (resultBD.length > 0) {
-                                            reservacion.idUsuario = resultBD[0].idUsuario;
-                
                                             connection.query("UPDATE reservacion SET ? WHERE idReservacion = ?", [reservacion, idReservacion], function (err, result) {
                                                 if (err) {
                                                     console.log("Error " + err);
@@ -388,21 +384,9 @@ async function actualizarReservacion(req, res) {
                             
                                             }); //fin query 2
                 
-                                        }else{
-                                        connection.release();
-                                            res.status(404).send({
-                                            message: "No existe el correo del usuario"
-                                            });
-                                        }
-                                    }); //fin query 1
-                                
                                 }
 
                             }else{
-                                connection.query("SELECT idUsuario FROM usuario WHERE correo = ?", correo, function (err, resultBD) {
-                                    if (resultBD.length > 0) {
-                                        reservacion.idUsuario = resultBD[0].idUsuario;
-            
                                         connection.query("UPDATE reservacion SET ? WHERE idReservacion = ?", [reservacion, idReservacion], function (err, result) {
                                             if (err) {
                                                 console.log("Error " + err);
@@ -435,13 +419,7 @@ async function actualizarReservacion(req, res) {
                         
                                         }); //fin query 2
             
-                                    }else{
-                                    connection.release();
-                                        res.status(404).send({
-                                        message: "No existe el correo del usuario"
-                                        });
-                                    }
-                                }); //fin query 1
+                                    
                             }
                         });
 

@@ -34,7 +34,9 @@ export class ReservacionService {
         this.router.navigate(["/reservacion"]);
       }, ((err: any) =>{
         if (err.status === 400) {
-          this.toastr.warning(err.message, 'No se ha reservado');
+          this.toastr.warning(err.error.message, 'No se ha reservado');
+        }else if(err.status === 404) {
+          this.toastr.warning(err.error.message, 'No se ha reservado');
         } else {
           this.toastr.error('Error en la aplicación.', 'Error');
           this.router.navigate(['/home']);
@@ -48,6 +50,10 @@ export class ReservacionService {
 
     putFinalizarReservacion(idReservacion: number){
       return this.http.put(this.apiUrl+'/api/reservacion/finaliza/'+idReservacion, this.httpOptions);
+    }
+
+    putEditarReservacion(idReservacion: number, Reservacion: ModelReservacion){
+      return this.http.put(this.apiUrl+'/api/reservacion/actualiza/'+idReservacion, JSON.stringify(Reservacion), this.httpOptions);
     }
 
 }

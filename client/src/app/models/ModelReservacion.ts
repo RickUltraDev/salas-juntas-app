@@ -4,8 +4,7 @@ export class ModelReservacion {
     public hora_final: string;
     public num_asistentes: number;
     public asunto: string;
-    public estado: string;
-    public correo: string;
+    public correoUsuario: string;
     public idSala: number;
 
     constructor(){
@@ -14,8 +13,7 @@ export class ModelReservacion {
      this.hora_final = '',
      this.num_asistentes = 0,
      this.asunto = '',
-     this.estado = '',
-     this.correo = '',
+     this.correoUsuario = '',
      this.idSala = 0
     }
 }

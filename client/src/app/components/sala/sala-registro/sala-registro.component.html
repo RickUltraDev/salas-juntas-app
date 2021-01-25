@@ -8,13 +8,13 @@
   <h3 class="text-center titulo-sala">Es rápido y sencillo.</h3>
   <form novalidate [formGroup]="registroForm" (ngSubmit)="postRegistro();">
     <h5 class="text-left">Datos básicos</h5>
-
+    
     <div class="row">
       <div class="col-md-4 mb-3">
         <div class="input-group">
           <span class="input-group-text" id="basic-addon1">Nombre:</span>
           <input type="text" id="nombre" [(ngModel)]="Sala.nombre" formControlName="nombre" maxlength="70"
-            class="form-control">
+            class="form-control" placeholder="Ejem. Everest">
         </div>
         <div class="alert alert-danger errorForm"
           *ngIf="registroForm.get('nombre').invalid && registroForm.get('nombre').touched">

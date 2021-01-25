@@ -1,1 +1,134 @@
-<p>reservacion-registro works!</p>
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="default" type="ball-clip-rotate-pulse" [fullScreen]="true">
+    <p class="carga-spinner">Cargando..</p>
+  </ngx-spinner>
+  
+  <div class="container pt-3 pb-3">
+    <h3 class="text-center titulo-reser">Registra una reservacion</h3>
+    <h3 class="text-center titulo-reser">Haz una junta pensandolo antes.</h3>
+    <form novalidate [formGroup]="registroForm" (ngSubmit)="postRegistro();">
+      <h5 class="text-left">Datos básicos</h5>
+  
+     <div class="row">
+        <div class="col-md-6 mb-3">
+            <div class="input-group">
+              <span class="input-group-text" id="basic-addon1">Nombre de la sala:</span>
+              <select class="browser-default custom-select" [(ngModel)]="Reservacion.idSala" formControlName="idSala">
+                <option [ngValue]="null" disabled> Elige una sala.. </option>
+                <option *ngFor="let Sala of listaSalas" [ngValue]="Sala.idSala">{{Sala.nombre}}</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <div class="input-group">
+              <span class="input-group-text" id="basic-addon1">Correo de usuario:</span>
+              <input type="email" id="correoUsuario" [(ngModel)]="Reservacion.correoUsuario"
+                formControlName="correoUsuario" class="form-control" maxlength="40"
+                placeholder="Ejem. usuario@lionrooms.com">
+            </div>
+            <div class="alert alert-danger errorForm" 
+            *ngIf="registroForm.get('correoUsuario').invalid && registroForm.get('correoUsuario').touched">
+              <div *ngIf="registroForm.get('correoUsuario').errors.required" class="errorForm">
+                El correo es invalido.
+              </div>
+              <div *ngIf="registroForm.get('correoUsuario').errors.pattern">
+                El correo es invalido.
+              </div>
+              <div *ngIf="registroForm.get('correoUsuario').errors.maxlength">
+                El correo a lo máximo debe tener 80 caracteres
+              </div>
+            </div>
+        </div>
+     </div>
+
+      <div class="row">
+        <div class="col-md-4 mb-3">
+          <div class="input-group">
+            <span class="input-group-text" id="basic-addon1">Fecha:</span>
+            <input type="date" id="fecha" [(ngModel)]="Reservacion.fecha" formControlName="fecha" 
+              class="form-control">
+          </div>
+          <div class="alert alert-danger errorForm"
+            *ngIf="registroForm.get('fecha').invalid && registroForm.get('fecha').touched">
+            <div *ngIf="registroForm.get('fecha').errors.required" class="errorForm">
+              La fecha es invalida.
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <div class="input-group">
+              <span class="input-group-text" id="basic-addon1">Hora inicial:</span>
+              <input type="time" id="hora_inicial" [(ngModel)]="Reservacion.hora_inicial" formControlName="hora_inicial" 
+                class="form-control">
+            </div>
+            <div class="alert alert-danger errorForm"
+              *ngIf="registroForm.get('hora_inicial').invalid && registroForm.get('hora_inicial').touched">
+              <div *ngIf="registroForm.get('hora_inicial').errors.required" class="errorForm">
+                La hora es invalida.
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4 mb-3">
+            <div class="input-group">
+              <span class="input-group-text" id="basic-addon1">Hora final:</span>
+              <input type="time" id="hora_final" [(ngModel)]="Reservacion.hora_final" formControlName="hora_final" 
+                class="form-control">
+            </div>
+            <div class="alert alert-danger errorForm"
+              *ngIf="registroForm.get('hora_final').invalid && registroForm.get('hora_final').touched">
+              <div *ngIf="registroForm.get('hora_final').errors.required" class="errorForm">
+                La hora es invalida.
+              </div>
+            </div>
+          </div>
+      </div>
+    
+      <div class="row">
+        <div class="col-md-4 mb-3">
+            <div class="input-group">
+              <span class="input-group-text" id="basic-addon1">Asunto de la junta:</span>
+              <input type="text" id="asunto" [(ngModel)]="Reservacion.asunto"
+                formControlName="asunto" class="form-control" maxlength="40"
+                placeholder="Ejem. Team Meeting">
+            </div>
+            <div class="alert alert-danger errorForm"
+            *ngIf="registroForm.get('asunto').invalid && registroForm.get('asunto').touched">
+            <div *ngIf="registroForm.get('asunto').errors.required" class="errorForm">
+              El asunto de la junta es invalido.
+            </div>
+            <div *ngIf="registroForm.get('asunto').errors.minlength">
+              El asunto de la junta minimo es 2 caracteres
+            </div>
+            <div *ngIf="registroForm.get('asunto').errors.maxlength">
+              El asunto de la junta maximo es 40 caracteres
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <div class="input-group">
+              <span class="input-group-text" id="basic-addon1">No. asistentes:</span>
+              <input type="number" id="num_asistentes" [(ngModel)]="Reservacion.num_asistentes"
+                formControlName="num_asistentes" class="form-control" min="0">
+            </div>
+            <div class="alert alert-danger errorForm"
+            *ngIf="registroForm.get('num_asistentes').invalid && registroForm.get('num_asistentes').touched">
+            <div *ngIf="registroForm.get('num_asistentes').errors.required" class="errorForm">
+              El numero de asistentes es invalido.
+            </div>
+            <div *ngIf="registroForm.get('num_asistentes').errors.min">
+              El numero de asistentes minimo es 1
+            </div>
+            <div *ngIf="registroForm.get('num_asistentes').errors.max">
+              El numero de asistentes maximo es 50
+            </div>
+          </div>
+          </div>
+      </div>
+      
+      <button type="submit" mat-raised-button color="primary" [disabled]="registroForm.invalid">Terminar registro</button>
+    </form>
+  </div>
+  
