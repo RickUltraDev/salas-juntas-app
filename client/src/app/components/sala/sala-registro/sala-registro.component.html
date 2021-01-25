@@ -1,1 +1,109 @@
-<p>sala-registro works!</p>
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="default" type="ball-clip-rotate-pulse" [fullScreen]="true">
+  <p class="carga-spinner">Cargando..</p>
+</ngx-spinner>
+
+
+<div class="container pt-3 pb-3">
+  <h3 class="text-center titulo-sala">Registra una nueva sala</h3>
+  <h3 class="text-center titulo-sala">Es rápido y sencillo.</h3>
+  <form novalidate [formGroup]="registroForm" (ngSubmit)="postRegistro();">
+    <h5 class="text-left">Datos básicos</h5>
+
+    <div class="row">
+      <div class="col-md-4 mb-3">
+        <div class="input-group">
+          <span class="input-group-text" id="basic-addon1">Nombre:</span>
+          <input type="text" id="nombre" [(ngModel)]="Sala.nombre" formControlName="nombre" maxlength="70"
+            class="form-control">
+        </div>
+        <div class="alert alert-danger errorForm"
+          *ngIf="registroForm.get('nombre').invalid && registroForm.get('nombre').touched">
+          <div *ngIf="registroForm.get('nombre').errors.required" class="errorForm">
+            El nombre es invalido.
+          </div>
+          <div *ngIf="registroForm.get('nombre').errors.minlength">
+            El nombre por lo menos debe tener 2 caracteres.
+          </div>
+          <div *ngIf="registroForm.get('nombre').errors.maxlength">
+            El nombre a lo máximo debe tener 70 caracteres.
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4 mb-3">
+        <div class="input-group">
+          <span class="input-group-text" id="basic-addon1">Numero de piso:</span>
+          <input type="number" id="num_piso" [(ngModel)]="Sala.num_piso" formControlName="num_piso"
+            min="1" class="form-control">
+        </div>
+        <div class="alert alert-danger errorForm"
+          *ngIf="registroForm.get('num_piso').invalid && registroForm.get('num_piso').touched">
+          <div *ngIf="registroForm.get('num_piso').errors.required" class="errorForm">
+            El numero de piso es invalido.
+          </div>
+          <div *ngIf="registroForm.get('num_piso').errors.min">
+            El numero de piso minimo es 1
+          </div>
+          <div *ngIf="registroForm.get('num_piso').errors.max">
+            El numero de piso maximo es 70
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4 mb-3">
+        <div class="input-group">
+            <span class="input-group-text" id="basic-addon1">Capacidad maxima:</span>
+            <input type="number" id="capacidad_max" [(ngModel)]="Sala.capacidad_max" formControlName="capacidad_max"
+              min="1" class="form-control">
+          </div>
+          <div class="alert alert-danger errorForm"
+            *ngIf="registroForm.get('capacidad_max').invalid && registroForm.get('capacidad_max').touched">
+            <div *ngIf="registroForm.get('capacidad_max').errors.required" class="errorForm">
+              El numero de piso es invalido.
+            </div>
+            <div *ngIf="registroForm.get('capacidad_max').errors.min">
+              El numero de piso minimo es 1
+            </div>
+            <div *ngIf="registroForm.get('capacidad_max').errors.max">
+              El numero de piso maximo es 30
+            </div>
+          </div>
+      </div>
+    </div>
+
+    
+    <h5 class="text-left">Horario hábil de la sala </h5>
+
+    <div class="row">
+      <div class="col-md-4 mb-3">
+        <div class="input-group">
+          <span class="input-group-text" id="basic-addon1">Hora apertura:</span>
+          <input type="time" id="hora_disp_inicial" [(ngModel)]="Sala.hora_disp_inicial"
+            formControlName="hora_disp_inicial" class="form-control">
+        </div>
+        <div class="alert alert-danger errorForm"
+          *ngIf="registroForm.get('hora_disp_inicial').invalid && registroForm.get('hora_disp_inicial').touched">
+          <div *ngIf="registroForm.get('hora_disp_inicial').errors.required" class="errorForm">
+            La hora es invalida.
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4 mb-3">
+        <div class="input-group">
+          <span class="input-group-text" id="basic-addon1">Hora cierre:</span>
+          <input type="time" id="hora_disp_final" [(ngModel)]="Sala.hora_disp_final"
+            formControlName="hora_disp_final" class="form-control">
+        </div>
+        <div class="alert alert-danger errorForm"
+          *ngIf="registroForm.get('hora_disp_final').invalid && registroForm.get('hora_disp_final').touched">
+          <div *ngIf="registroForm.get('hora_disp_final').errors.required" class="errorForm">
+            La hora es invalida.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <button type="submit" mat-raised-button color="primary" [disabled]="registroForm.invalid" >Terminar registro</button>
+  </form>
+</div>

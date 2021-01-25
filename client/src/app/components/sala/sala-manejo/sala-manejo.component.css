@@ -34,6 +34,10 @@ table {
   color: #ffc107;
 }
 
+.detalles-modal{
+  font-size: 1.1rem;
+}
+
 .footer-modal {
   font-size: 0.8rem;
   color: gray;
