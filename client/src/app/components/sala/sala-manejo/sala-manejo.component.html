@@ -12,7 +12,7 @@
           <div class="input-group-prepend">
             <span class="input-group-text" id="inputGroup-sizing-sm"><fa-icon [icon]="faSearch"></fa-icon></span>
           </div>
-          <input type="text" (keyup)="applyFilter($event)" class="form-control"
+          <input type="text" (keyup)="applyFilter($event)" class="form-control" maxlength="40"
             placeholder="ID Sala, Nombre(s), Capacidad maxima, Numero piso" #input>
         </div>
       </div>
@@ -93,7 +93,7 @@
                         <fa-icon [icon]="faBuilding"></fa-icon> Piso {{row.num_piso}} <br>
                         <fa-icon [icon]="faPeopleArrows"></fa-icon> Capacidad → {{row.capacidad_max}} Personas <br>
                         <fa-icon [icon]="faClock"></fa-icon> Horario hábil → 
-                        {{row.hora_disp_inicial | slice:0:5}} hrs a {{row.hora_disp_final | slice:0:5}} hrs.
+                        {{row.hora_disp_inicial | convertFrom24To12Format}} a {{row.hora_disp_final | convertFrom24To12Format}}
                         <br> 
                       </p>
                      </div>
@@ -154,7 +154,7 @@
                                 El nombre por lo menos debe tener 2 caracteres.
                               </div>
                               <div *ngIf="editarForm.get('nombre').errors.maxlength">
-                                El nombre a lo máximo debe tener 70 caracteres.
+                                El nombre a lo máximo debe tener 40 caracteres.
                               </div>
                             </div>
                           </div>

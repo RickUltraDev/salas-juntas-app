@@ -1,0 +1,197 @@
+<ngx-spinner bdColor = "rgba(0, 0, 0, 0.8)" size = "default" 
+   type = "ball-clip-rotate-pulse" [fullScreen] = "true">
+   <p class="carga-spinner">Cargando..</p>
+</ngx-spinner>
+
+
+<div class="container-fluid p-2">
+    <div class="container busqueda-contenedor p-3">
+      <div class="row">
+        <div class="col-md-12">
+          <p class="text-left busqueda-titulo">Búsqueda de reservaciones</p>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="inputGroup-sizing-sm"><fa-icon [icon]="faSearch"></fa-icon></span>
+            </div>
+            <input type="text" (keyup)="applyFilter($event)" class="form-control" maxlength="40"
+              placeholder="ID Reservacion, Nombre sala, Reservado por, Estado de reservacion" #input>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container pt-2">
+    <div class="row pt-4 pl-3" *ngIf="dataSource.data.length == 0">
+      <div class="col-md-7 col-xs-7">
+        <h5 class="text-left"><fa-icon [icon]="faExclamationCircle"></fa-icon> No hay reservaciones
+          registradas</h5>
+        <p class="text-left noEncontrado">Te sugerimos:</p>
+        <ul class="text-left noEncontrado">
+          <li>Registrar alguna reservacion</li>
+          <li>Revisar conexión a internet</li>
+          <li>Si hubo un error contactanos soporte@lionrooms.com</li>
+        </ul>
+  
+      </div>
+    </div>
+  
+    <div class="table-responsive-md table-hover">
+  
+      <table mat-table [dataSource]="dataSource" matSort>
+        <ng-container matColumnDef="idReservacion">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> ID Reservacion </th>
+          <td mat-cell *matCellDef="let row"> {{row.idReservacion}} </td>
+        </ng-container>
+  
+        <ng-container matColumnDef="fecha">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha </th>
+          <td mat-cell *matCellDef="let row"> {{row.fecha | date: 'mediumDate'}} </td>
+        </ng-container>
+  
+        <ng-container matColumnDef="hora">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Horario registrado </th>
+          <td mat-cell *matCellDef="let row"> {{row.hora_inicial | convertFrom24To12Format}} →  
+            {{row.hora_final | convertFrom24To12Format}} </td>
+        </ng-container>
+  
+
+        <ng-container matColumnDef="sala">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Sala </th>
+            <td mat-cell *matCellDef="let row"> {{row.nombre_sala | titlecase}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="estado">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado Sala </th>
+            <td mat-cell *matCellDef="let row"> {{row.estado | titlecase}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="reservado_por">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Reservado por </th>
+            <td mat-cell *matCellDef="let row"> {{row.nombre_reserva | titlecase}}</td>
+          </ng-container>
+  
+        <ng-container matColumnDef="acciones">
+          <th mat-header-cell *matHeaderCellDef>Acciones</th>
+          <td class="pb-1 pt-1" mat-cell *matCellDef="let row">
+  
+            <button mat-mini-fab color="secondary" ngbTooltip="Detalles reservacion" (click)="openDetalles(contentDetalles)">
+              <mat-icon>event</mat-icon>
+            </button>
+
+            <button mat-mini-fab color="primary" *ngIf="row.estado == 'Ocupada'"
+            ngbTooltip="Finalizar reservacion" (click)="openFinaliza(contentFinaliza, row.idReservacion)">
+                <mat-icon>alarm_off</mat-icon>
+              </button>
+            
+              <button mat-mini-fab color="primary" *ngIf="row.estado == 'Libre'"
+            ngbTooltip="Finalizar reservacion" disabled>
+                <mat-icon>alarm_off</mat-icon>
+            </button>
+  
+            <button mat-mini-fab color="accent" ngbTooltip="Editar reservacion">
+              <mat-icon>date_range</mat-icon>
+            </button>
+  
+            <button mat-mini-fab color="warn"  ngbTooltip="Eliminar reservacion" (click)="openElimina(contentElimina, row.idReservacion)">
+              <mat-icon>event_busy</mat-icon>
+            </button>
+  
+             <!-- Aqui van los modales-->
+
+             <!-- Modal detalles -->
+            <ng-template #contentDetalles let-modal>
+                <div class="modal-header">
+                <h4 class="modal-title titulo-modal" id="modal-basic-title">Detalles de reservación</h4>
+                <button class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12 text-left">
+                        <p class="detalles-modal"> 
+                            <fa-icon [icon]="faBuilding"></fa-icon> {{row.nombre_sala}} <br>
+                            <fa-icon [icon]="faCalendar"></fa-icon> {{row.fecha | date: 'mediumDate'}} <br>
+                            <fa-icon [icon]="faUser"></fa-icon> Reservador por → {{row.nombre_reserva}} <br>
+                            <fa-icon [icon]="faClock"></fa-icon> Horario  → {{row.hora_inicial | convertFrom24To12Format}} hasta  
+                            {{row.hora_final | convertFrom24To12Format}} <br>
+                            <fa-icon [icon]="faFileSignature"></fa-icon> Asunto → {{row.asunto}} <br>
+                            <fa-icon [icon]="faUserFriends"></fa-icon> No. Asistentes → {{row.num_asistentes}} <br>
+                            <fa-icon [icon]="faLock"></fa-icon> Estado sala → {{row.estado}} <br>
+
+                        </p>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                <button mat-raised-button color="primary" (click)="modal.close('Send')">Cerrar </button>
+                </div>
+            </ng-template>
+
+            <!-- Modal Elimina -->
+            <ng-template #contentElimina let-modal>
+                <div class="modal-header">
+                <h4 class="modal-title titulo-modal" id="modal-title">Eliminar reservación</h4>
+                <button type="button" class="close" aria-describedby="modal-title" (click)="modal.dismiss('Cross click')">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div class="modal-body">
+                <p><strong>¿Eliminar la reservación de la sala  
+                    <span>"{{row.nombre_sala}}"</span> a las {{row.hora_inicial |convertFrom24To12Format}} ?</strong></p>
+                <p>Toda la información asociada con esta operación será eliminada. <br />
+                </p>
+                </div>
+                <div class="modal-footer">
+                <button mat-raised-button color="primary" class="mr-1" (click)="modal.dismiss('cancel click')">Cancelar </button>
+                <button mat-raised-button color="warn" (click)="modal.close('Ok click')">Eliminar </button>
+                </div>
+            </ng-template>
+
+             <!-- Modal Finaliza -->
+             <ng-template #contentFinaliza let-modal>
+                <div class="modal-header">
+                <h4 class="modal-title titulo-modal" id="modal-title">Terminar reservación</h4>
+                <button type="button" class="close" aria-describedby="modal-title" (click)="modal.dismiss('Cross click')">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div class="modal-body">
+                <p><strong>¿Terminar la reservación de la sala  
+                    <span>"{{row.nombre_sala}}"</span> ?</strong></p>
+                <p>No se recabará información asociada con esta operación. <br />
+                </p>
+                </div>
+                <div class="modal-footer">
+                <button mat-raised-button color="primary" class="mr-1" (click)="modal.dismiss('cancel click')">Cancelar </button>
+                <button mat-raised-button color="accent" (click)="modal.close('Ok click')">Finalizar </button>
+                </div>
+            </ng-template>
+  
+          </td>
+        </ng-container>
+  
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" colspan="4">No se encontró nada en lo filtrado con: "{{input.value}}"</td>
+        </tr>
+  
+      </table>
+  
+      <mat-paginator [pageSizeOptions]="[5, 10, 15]"></mat-paginator>
+    </div>
+  
+    <div class="example-button-row">
+      <button mat-raised-button color="accent" class="mr-2" routerLink="/reservacion/registro">
+        <mat-icon mat-mini>room_service</mat-icon> Crear reservacion</button>
+        <button mat-raised-button color="primary" class="mr-2" routerLink="/reservacion/registro">
+        <mat-icon mat-mini>person_add</mat-icon> Añadir usuario</button>
+        <button mat-raised-button color="primary" class="mr-2" routerLink="/reservacion/registro">
+        <mat-icon mat-mini>people</mat-icon> Ver usuarios</button>
+    </div>
+    
+  </div>

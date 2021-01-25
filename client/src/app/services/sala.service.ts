@@ -7,7 +7,7 @@ import { ToastrService } from 'ngx-toastr'; //Para tener los mensaje de toast en
 
 import { Observable } from "rxjs"; 
 
-import { ModelSala } from '../models/ModelSala';
+import { ModelSala } from '../models/ModelSala'; //Modelos que usará el servicio
 
 @Injectable({
   providedIn: 'root'

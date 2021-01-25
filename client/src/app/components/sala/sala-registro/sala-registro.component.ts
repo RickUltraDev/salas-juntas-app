@@ -39,8 +39,8 @@ export class SalaRegistroComponent implements OnInit {
     private scrollTopService: ScrollTopService
   ) {
     this.registroForm = this.builder.group({
-      nombre: ["", [Validators.required,Validators.minLength(2), Validators.maxLength(70)]],
-      num_piso: [null, [Validators.required,Validators.min(1),Validators.max(70)]],
+      nombre: ["", [Validators.required,Validators.minLength(2), Validators.maxLength(40)]],
+      num_piso: [null, [Validators.required,Validators.min(1),Validators.max(50)]],
       capacidad_max: [null, [Validators.required,Validators.min(1),Validators.max(30)]],
       hora_disp_inicial: ["", [Validators.required]], 
       hora_disp_final: ["", [Validators.required]]

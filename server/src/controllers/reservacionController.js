@@ -8,7 +8,7 @@ async function getReservaciones(req, res) {
     var reservaciones = null;
     try {
         dbpool.getConnection(function (err, connection) {
-            dbpool.query("SELECT * FROM reservacion", function (
+            dbpool.query("SELECT * FROM muestrareservaciones", function (
                 err,
                 results
             ) {
@@ -82,13 +82,13 @@ async function registrarReservacion(req, res) {
                 });
             } else {
 
-                const { correo } = req.body;
+                const { correoUsuario } = req.body;
                 let reservacion = {
                     fecha: req.body.fecha,
                     hora_inicial: req.body.hora_inicial,
                     hora_final: req.body.hora_final,
                     num_asistentes: req.body.num_asistentes,
-                    descripcion: req.body.descripcion,
+                    asunto: req.body.asunto,
                     estado: 'oc',
                     idUsuario: null,
                     idSala: req.body.idSala
@@ -128,7 +128,7 @@ async function registrarReservacion(req, res) {
                                 message: "Sala ocupada a la hora elegida"});
                                 
                                 }else{
-                                    connection.query("SELECT idUsuario FROM usuario WHERE correo = ?", correo, function (err, resultBD) {
+                                    connection.query("SELECT idUsuario FROM usuario WHERE correo = ?", correoUsuario, function (err, resultBD) {
                                         if (resultBD.length > 0) {
                                             reservacion.idUsuario = resultBD[0].idUsuario;
                 
@@ -308,13 +308,13 @@ async function actualizarReservacion(req, res) {
                 });
             } else {
 
-                const { correo } = req.body;
+                const { correoUsuario } = req.body;
                 let reservacion = {
                     fecha: req.body.fecha,
                     hora_inicial: req.body.hora_inicial,
                     hora_final: req.body.hora_final,
                     num_asistentes: req.body.num_asistentes,
-                    descripcion: req.body.descripcion,
+                    asunto: req.body.asunto,
                     idUsuario: null,
                     idSala: req.body.idSala
                 };
@@ -352,7 +352,7 @@ async function actualizarReservacion(req, res) {
                                 message: "Sala ocupada a la hora elegida"});
                                 
                                 }else{
-                                    connection.query("SELECT idUsuario FROM usuario WHERE correo = ?", correo, function (err, resultBD) {
+                                    connection.query("SELECT idUsuario FROM usuario WHERE correo = ?", correoUsuario, function (err, resultBD) {
                                         if (resultBD.length > 0) {
                                             reservacion.idUsuario = resultBD[0].idUsuario;
                 

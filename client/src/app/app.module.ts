@@ -48,14 +48,22 @@ import { MatIconModule } from '@angular/material/icon';
 /* Select */
 import { MatSelectModule } from '@angular/material/select';
 
+/* Pipe cambio de formato 24hrs a 12hrs */
+import { ConvertFrom24To12FormatPipe } from './pipes/convert-from24-to12-format.pipe';
+
 /*Componentes de las paginas principales */
 import { HomepageComponent } from './components/pages/homepage/homepage.component';
 import { FooterComponent } from './components/pages/footer/footer.component';
 import { NavbarHomeComponent } from './components/pages/navbar-home/navbar-home.component';
+import { ErrorpageComponent } from './components/pages/errorpage/errorpage.component';
 
-/* Componentes de la salas */
+/* Componentes de las salas */
 import { SalaManejoComponent } from './components/sala/sala-manejo/sala-manejo.component';
 import { SalaRegistroComponent } from './components/sala/sala-registro/sala-registro.component';
+/* Componentes de las reservaciones */
+import { ReservacionManejoComponent } from './components/reservacion/reservacion-manejo/reservacion-manejo.component';
+import { ReservacionRegistroComponent } from './components/reservacion/reservacion-registro/reservacion-registro.component';
+
 
 
 @NgModule({
@@ -64,8 +72,12 @@ import { SalaRegistroComponent } from './components/sala/sala-registro/sala-regi
     HomepageComponent,
     FooterComponent,
     NavbarHomeComponent,
+    ErrorpageComponent,
     SalaManejoComponent,
-    SalaRegistroComponent
+    SalaRegistroComponent,
+    ReservacionManejoComponent,
+    ReservacionRegistroComponent,
+    ConvertFrom24To12FormatPipe
   ],
   imports: [
     BrowserModule,

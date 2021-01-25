@@ -1,0 +1,25 @@
+VIEWS
+
+--------------------------------------------------------------- muestraReservaciones
+
+use salasjuntasdb;
+
+CREATE OR REPLACE VIEW muestraReservaciones
+AS
+SELECT r.idReservacion as idReservacion, r.fecha as fecha,
+r.hora_inicial as hora_inicial, r.hora_final as hora_final, 
+r.num_asistentes as num_asistentes, r.descripcion as descripcion,
+CASE r.estado
+      WHEN 'li' THEN 'Libre'
+      WHEN 'oc' THEN 'Ocupada'
+END AS estado, CONCAT(u.nombre,' ',u.ap_paterno,' ', u.ap_materno) as nombre_reserva,
+s.nombre as nombre_sala
+FROM reservacion r 
+INNER JOIN sala s ON r.idSala = s.idSala
+INNER JOIN usuario u ON r.idUsuario = u.idUsuario
+WHERE s.valido != 0;
+
+SELECT * FROM muestraReservaciones;
+
+---------------------------------------------------------------
+
