@@ -1,3 +1,14 @@
 <div class="container py-4">
-    <p class="text-center">Reloj aqui</p>
+
+    <div class="container d-flex justify-content-center row reloj-contenedor">
+        <div class="col-md-4">
+            Día → {{dia}} {{fecha}}
+        </div>
+        <div class="col-md-4">
+            <div>Hora → {{hora}}:{{minuto}}:{{segundo}} {{ampm}} </div>
+        </div>
+    </div>
+    
+    <app-reservacion-manejo></app-reservacion-manejo>
+ 
 </div>

@@ -1,0 +1,7 @@
+Requisitos de administracion de salas de juntas
+
+1. Creación de CRUD para sala de juntas
+2. Se debe de reservar una sala de juntas con un rango de horario inicial y final
+3. No puede reservar sala de juntas que estén ocupadas
+4. No puede reservar sala de juntas por más de 2 horas
+6. Se puede liberar la sala de juntas de manera manual antes de finalizar
