@@ -308,9 +308,7 @@ async function actualizarReservacion(req, res) {
                 });
             } else {
 
-                const { correoUsuario } = req.body;
                 let reservacion = {
-                    fecha: req.body.fecha,
                     hora_inicial: req.body.hora_inicial,
                     hora_final: req.body.hora_final,
                     num_asistentes: req.body.num_asistentes,
@@ -319,8 +317,9 @@ async function actualizarReservacion(req, res) {
                     idSala: req.body.idSala
                 };
 
-                let horaFin = (new Date(reservacion.fecha+" "+reservacion.hora_final)).getTime();
-                let horaIn = (new Date(reservacion.fecha+" "+reservacion.hora_inicial)).getTime();
+                let fechaHoy = new Date().toISOString().slice(0, 10);
+                let horaFin = (new Date(fechaHoy+" "+reservacion.hora_final)).getTime();
+                let horaIn = (new Date(fechaHoy+" "+reservacion.hora_inicial)).getTime();
         
                 let tiempoReser = horaFin - horaIn;
                 

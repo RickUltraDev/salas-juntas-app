@@ -20,7 +20,8 @@ s.idSala as idSala
 FROM reservacion r 
 INNER JOIN sala s ON r.idSala = s.idSala
 INNER JOIN usuario u ON r.idUsuario = u.idUsuario
-WHERE s.valido != 0;
+WHERE s.valido != 0 
+ORDER By r.fecha desc, hora_inicial asc;
 
 SELECT * FROM muestraReservaciones;
 

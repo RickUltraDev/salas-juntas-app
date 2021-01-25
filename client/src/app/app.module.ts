@@ -60,10 +60,13 @@ import { ErrorpageComponent } from './components/pages/errorpage/errorpage.compo
 /* Componentes de las salas */
 import { SalaManejoComponent } from './components/sala/sala-manejo/sala-manejo.component';
 import { SalaRegistroComponent } from './components/sala/sala-registro/sala-registro.component';
+
 /* Componentes de las reservaciones */
 import { ReservacionManejoComponent } from './components/reservacion/reservacion-manejo/reservacion-manejo.component';
 import { ReservacionRegistroComponent } from './components/reservacion/reservacion-registro/reservacion-registro.component';
 
+/* Componentes de los usuarios */
+import { UsuarioRegistroComponent } from './components/usuario/usuario-registro/usuario-registro.component';
 
 
 @NgModule({
@@ -77,7 +80,8 @@ import { ReservacionRegistroComponent } from './components/reservacion/reservaci
     SalaRegistroComponent,
     ReservacionManejoComponent,
     ReservacionRegistroComponent,
-    ConvertFrom24To12FormatPipe
+    ConvertFrom24To12FormatPipe,
+    UsuarioRegistroComponent
   ],
   imports: [
     BrowserModule,

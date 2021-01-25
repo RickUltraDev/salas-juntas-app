@@ -15,6 +15,8 @@ import { SalaRegistroComponent } from  './components/sala/sala-registro/sala-reg
 import { ReservacionManejoComponent } from './components/reservacion/reservacion-manejo/reservacion-manejo.component';
 import { ReservacionRegistroComponent } from './components/reservacion/reservacion-registro/reservacion-registro.component';
 
+/* Usuarios */
+import { UsuarioRegistroComponent } from './components/usuario/usuario-registro/usuario-registro.component';
 
 const routes: Routes = [
   {path: "", redirectTo: "home", pathMatch: "full"},
@@ -23,6 +25,7 @@ const routes: Routes = [
   { path: "sala/registro", component: SalaRegistroComponent},
   { path: "reservacion", component: ReservacionManejoComponent},
   { path: "reservacion/registro", component: ReservacionRegistroComponent},
+  { path: "usuario/registro", component: UsuarioRegistroComponent},
   { path: "**", component: ErrorpageComponent }
 ];
 

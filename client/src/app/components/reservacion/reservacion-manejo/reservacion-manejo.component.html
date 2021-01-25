@@ -176,20 +176,7 @@
 
                      
                           <div class="row">
-                            <div class="col-md-5 mb-3">
-                              <div class="input-group">
-                                <span class="input-group-text" id="basic-addon1">Fecha:</span>
-                                <input type="date" id="fecha" [(ngModel)]="row.fecha" formControlName="fecha" 
-                                  class="form-control">
-                              </div>
-                              <div class="alert alert-danger errorForm"
-                                *ngIf="editarForm.get('fecha').invalid && editarForm.get('fecha').touched">
-                                <div *ngIf="editarForm.get('fecha').errors.required" class="errorForm">
-                                  La fecha es invalida.
-                                </div>
-                              </div>
-                            </div>
-                    
+                            
                             <div class="col-md-5 mb-3">
                                 <div class="input-group">
                                   <span class="input-group-text" id="basic-addon1">Hora inicial:</span>
@@ -203,22 +190,22 @@
                                   </div>
                                 </div>
                               </div>
+                              <div class="col-md-5 mb-3">
+                                <div class="input-group">
+                                  <span class="input-group-text" id="basic-addon1">Hora final:</span>
+                                  <input type="time" id="hora_final" [(ngModel)]="row.hora_final" formControlName="hora_final" 
+                                    class="form-control">
+                                </div>
+                                <div class="alert alert-danger errorForm"
+                                  *ngIf="editarForm.get('hora_final').invalid && editarForm.get('hora_final').touched">
+                                  <div *ngIf="editarForm.get('hora_final').errors.required" class="errorForm">
+                                    La hora es invalida.
+                                  </div>
+                                </div>
+                              </div>
                           </div>
 
                           <div class="row">
-                            <div class="col-md-5 mb-3">
-                              <div class="input-group">
-                                <span class="input-group-text" id="basic-addon1">Hora final:</span>
-                                <input type="time" id="hora_final" [(ngModel)]="row.hora_final" formControlName="hora_final" 
-                                  class="form-control">
-                              </div>
-                              <div class="alert alert-danger errorForm"
-                                *ngIf="editarForm.get('hora_final').invalid && editarForm.get('hora_final').touched">
-                                <div *ngIf="editarForm.get('hora_final').errors.required" class="errorForm">
-                                  La hora es invalida.
-                                </div>
-                              </div>
-                            </div>
                             <div class="col-md-5 mb-3">
                               <div class="input-group">
                                 <span class="input-group-text" id="basic-addon1">No. asistentes:</span>
@@ -238,30 +225,29 @@
                               </div>
                             </div>
                           </div>
-                          </div>
-                        
-                          <div class="row">
-                            <div class="col-md-10 mb-3">
-                                <div class="input-group">
-                                  <span class="input-group-text" id="basic-addon1">Asunto de la junta:</span>
-                                  <input type="text" id="asunto" [(ngModel)]="row.asunto"
-                                    formControlName="asunto" class="form-control" maxlength="40"
-                                    placeholder="Ejem. Team Meeting">
-                                </div>
-                                <div class="alert alert-danger errorForm"
-                                *ngIf="editarForm.get('asunto').invalid && editarForm.get('asunto').touched">
-                                <div *ngIf="editarForm.get('asunto').errors.required" class="errorForm">
-                                  El asunto de la junta es invalido.
-                                </div>
-                                <div *ngIf="editarForm.get('asunto').errors.minlength">
-                                  El asunto de la junta minimo es 2 caracteres
-                                </div>
-                                <div *ngIf="editarForm.get('asunto').errors.maxlength">
-                                  El asunto de la junta maximo es 40 caracteres
-                                </div>
-                              </div>
+                          <div class="col-md-5 mb-3">
+                            <div class="input-group">
+                              <span class="input-group-text" id="basic-addon1">Asunto junta:</span>
+                              <input type="text" id="asunto" [(ngModel)]="row.asunto"
+                                formControlName="asunto" class="form-control" maxlength="40"
+                                placeholder="Ejem. Team Meeting">
+                            </div>
+                            <div class="alert alert-danger errorForm"
+                            *ngIf="editarForm.get('asunto').invalid && editarForm.get('asunto').touched">
+                            <div *ngIf="editarForm.get('asunto').errors.required" class="errorForm">
+                              El asunto de la junta es invalido.
+                            </div>
+                            <div *ngIf="editarForm.get('asunto').errors.minlength">
+                              El asunto de la junta minimo es 2 caracteres
+                            </div>
+                            <div *ngIf="editarForm.get('asunto').errors.maxlength">
+                              El asunto de la junta maximo es 40 caracteres
                             </div>
                           </div>
+                        </div>
+                          </div>
+                        
+                        
                     </div>
                 </form>
               </div>
@@ -309,10 +295,36 @@
     <div class="example-button-row">
       <button mat-raised-button color="accent" class="mr-2" routerLink="/reservacion/registro">
         <mat-icon mat-mini>room_service</mat-icon> Crear reservacion</button>
-        <button mat-raised-button color="primary" class="mr-2" routerLink="/reservacion/registro">
+        <button mat-raised-button color="primary" class="mr-2" routerLink="/usuario/registro">
         <mat-icon mat-mini>person_add</mat-icon> Añadir usuario</button>
-        <button mat-raised-button color="primary" class="mr-2" routerLink="/reservacion/registro">
+        <button mat-raised-button color="primary" class="mr-2"
+        (click)="openUsuarios(contentUsuario)">
         <mat-icon mat-mini>people</mat-icon> Ver usuarios</button>
+
+        <!-- Modal usuario -->
+        <ng-template #contentUsuario let-modal>
+          <div class="modal-header">
+          <h4 class="modal-title titulo-modal" id="modal-basic-title">Usuarios registrados</h4>
+          <button class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+              <span aria-hidden="true">&times;</span>
+          </button>
+          </div>
+          <div class="modal-body">
+              <div class="container">
+                <div class="row">
+                  <div class="col-md-8">
+                    <p *ngFor="let Usuario of listaUsuarios">
+                      <fa-icon [icon]="faUser"></fa-icon> {{Usuario.nombre}} {{Usuario.ap_paterno}} {{Usuario.ap_materno}} <br>
+                      <fa-icon [icon]="faEnvelope"></fa-icon> {{Usuario.correo}} <br> 
+                    </p>
+                  </div>
+                </div>
+              </div>
+          </div>
+          <div class="modal-footer">
+          <button mat-raised-button color="primary" (click)="modal.close('Send')">Cerrar </button>
+          </div>
+      </ng-template>
     </div>
     
   </div>

@@ -13,11 +13,12 @@ import { ToastrService } from 'ngx-toastr'; //Para tener los mensaje de toast en
 import { NgxSpinnerService } from 'ngx-spinner'; //Para el spinner de carga
 import { faSearch, faExclamationCircle, faFileSignature, 
   faBuilding, faPeopleArrows, faClock,
-  faCalendarDay, faUser, faUserFriends, faLock } from '@fortawesome/free-solid-svg-icons'; //Iconos
+  faCalendarDay, faUser, faUserFriends, faLock, faEnvelope } from '@fortawesome/free-solid-svg-icons'; //Iconos
 
 //Servicios que usará el componente
 import { ReservacionService } from '../../../services/reservacion.service';
 import { SalaService } from '../../../services/sala.service';
+import { UsuarioService } from '../../../services/usuario.service';
 
 //Modelos que usará el componente
 import { ModelReservacion } from 'src/app/models/ModelReservacion';
@@ -48,6 +49,7 @@ export class ReservacionManejoComponent implements OnInit, AfterViewInit {
   faUser = faUser;
   faUserFriends = faUserFriends;
   faLock = faLock;
+  faEnvelope = faEnvelope;
 
   //Variables para las reservaciones
   listaReserv: any = [];
@@ -71,9 +73,9 @@ export class ReservacionManejoComponent implements OnInit, AfterViewInit {
 
   //Formulario a usar
   editarForm: FormGroup; 
-  //Formulario a usar
   public Reservacion: ModelReservacion;
   listaSalas: any = [];
+  listaUsuarios: any = [];
 
   constructor(
     private titleService: Title,
@@ -83,13 +85,14 @@ export class ReservacionManejoComponent implements OnInit, AfterViewInit {
     private toastr: ToastrService,
     private reservacionService: ReservacionService,
     private salaService: SalaService,
+    private usuarioService: UsuarioService,
     private modalService: NgbModal
   ) { 
     //Asigna los datos a la lista data source para el renderizado de la tabla
     this.dataSource = new MatTableDataSource(this.listaReserv);
 
     this.editarForm = this.builder.group({
-      fecha: ["", Validators.required], 
+      fecha: [""], 
       hora_inicial: ["", Validators.required], 
       hora_final: ["", Validators.required],
       num_asistentes:[null ,[Validators.required,Validators.min(1),Validators.max(50)]],
@@ -142,6 +145,24 @@ export class ReservacionManejoComponent implements OnInit, AfterViewInit {
       (error: any) => {
         if (error.status == 404) {
          this.listaSalas = [];
+        } else {
+          this.toastr.error('Error en la aplicación', 'Error');
+          this.router.navigate(['/home']);
+        }
+      });
+   }
+
+   //Funcion para cargar las salas desde el backend atraves de un servicio
+   cargarUsuarios() {
+    return this.usuarioService.getMuestraUsuarios().subscribe(
+      (resp: any) => {
+        this.listaUsuarios = resp['JsonArray'];
+        console.log(this.listaUsuarios);
+        
+      },
+      (error: any) => {
+        if (error.status == 404) {
+         this.listaUsuarios = [];
         } else {
           this.toastr.error('Error en la aplicación', 'Error');
           this.router.navigate(['/home']);
@@ -216,6 +237,24 @@ export class ReservacionManejoComponent implements OnInit, AfterViewInit {
         (result) => {   
            this.finalizarReservacion(idReservacion);
            
+          this.closeResult = `Closed with: ${result}`;
+        },
+        (reason) => {
+          this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+        }
+      );
+  }
+
+  openUsuarios(contentUsuario) {
+    this.cargarUsuarios();
+    this.modalService
+      .open(contentUsuario, {
+        size: 'md',
+        scrollable: true,
+        ariaLabelledBy: 'modal-basic-title',
+      })
+      .result.then(
+        (result) => {
           this.closeResult = `Closed with: ${result}`;
         },
         (reason) => {
@@ -305,3 +344,7 @@ export class ReservacionManejoComponent implements OnInit, AfterViewInit {
     }
 
 }
+function contentDetalles(contentDetalles: any) {
+  throw new Error('Function not implemented.');
+}
+

@@ -1,0 +1,119 @@
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="default" type="ball-clip-rotate-pulse" [fullScreen]="true">
+    <p class="carga-spinner">Cargando..</p>
+  </ngx-spinner>
+
+  <div class="container pt-3 pb-3">
+    <h3 class="text-center titulo-sala">Registra un nuevo usuario para reservar salas</h3>
+    <h3 class="text-center titulo-sala">Es rápido y sencillo.</h3>
+    <form novalidate [formGroup]="registroForm" (ngSubmit)="postRegistro();">
+      <h5 class="text-left">Datos básicos</h5>
+      
+      <div class="row">
+        <div class="col-md-4 mb-3">
+          <div class="input-group">
+            <span class="input-group-text" id="basic-addon1">Nombre:</span>
+            <input type="text" id="nombre" [(ngModel)]="Usuario.nombre" formControlName="nombre" maxlength="70"
+              class="form-control" placeholder="Ejem. Juan">
+          </div>
+          <div class="alert alert-danger errorForm"
+            *ngIf="registroForm.get('nombre').invalid && registroForm.get('nombre').touched">
+            <div *ngIf="registroForm.get('nombre').errors.required" class="errorForm">
+              El nombre es invalido.
+            </div>
+            <div *ngIf="registroForm.get('nombre').errors.minlength">
+              El nombre por lo menos debe tener 2 caracteres.
+            </div>
+            <div *ngIf="registroForm.get('nombre').errors.maxlength">
+              El nombre a lo máximo debe tener 60 caracteres.
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <div class="input-group">
+              <span class="input-group-text" id="basic-addon1">Ap. Paterno:</span>
+              <input type="text" id="ap_paterno" [(ngModel)]="Usuario.ap_paterno" formControlName="ap_paterno" maxlength="60"
+                class="form-control" placeholder="Ejem. Perez">
+            </div>
+            <div class="alert alert-danger errorForm"
+              *ngIf="registroForm.get('ap_paterno').invalid && registroForm.get('ap_paterno').touched">
+              <div *ngIf="registroForm.get('ap_paterno').errors.required" class="errorForm">
+                El apellido paterno es invalido.
+              </div>
+              <div *ngIf="registroForm.get('ap_paterno').errors.minlength">
+                El apellido paterno por lo menos debe tener 2 caracteres.
+              </div>
+              <div *ngIf="registroForm.get('ap_paterno').errors.maxlength">
+                El apellido paterno a lo máximo debe tener 60 caracteres.
+              </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <div class="input-group">
+              <span class="input-group-text" id="basic-addon1">Ap. Materno:</span>
+              <input type="text" id="ap_materno" [(ngModel)]="Usuario.ap_materno" formControlName="ap_materno" maxlength="60"
+                class="form-control" placeholder="Ejem. Montes">
+            </div>
+            <div class="alert alert-danger errorForm"
+              *ngIf="registroForm.get('ap_materno').invalid && registroForm.get('ap_materno').touched">
+              <div *ngIf="registroForm.get('ap_materno').errors.required" class="errorForm">
+                El apellido materno es invalido.
+              </div>
+              <div *ngIf="registroForm.get('ap_materno').errors.minlength">
+                El apellido materno por lo menos debe tener 2 caracteres.
+              </div>
+              <div *ngIf="registroForm.get('ap_materno').errors.maxlength">
+                El apellido materno a lo máximo debe tener 60 caracteres.
+              </div>
+            </div>
+        </div>
+      </div>
+  
+      
+      <h5 class="text-left">Credenciales </h5>
+  
+      <div class="row">
+        <div class="col-md-4 mb-3">
+            <div class="input-group">
+              <span class="input-group-text" id="basic-addon1">Correo:</span>
+              <input type="email" id="correo" [(ngModel)]="Usuario.correo" formControlName="correo" maxlength="70"
+                class="form-control" placeholder="Ejem. usuario@lionrooms.com">
+            </div>
+            <div class="alert alert-danger errorForm" 
+            *ngIf="registroForm.get('correo').invalid && registroForm.get('correo').touched">
+              <div *ngIf="registroForm.get('correo').errors.required" class="errorForm">
+                El correo es invalido.
+              </div>
+              <div *ngIf="registroForm.get('correo').errors.pattern">
+                El correo es invalido.
+              </div>
+              <div *ngIf="registroForm.get('correo').errors.maxlength">
+                El correo a lo máximo debe tener 70 caracteres
+              </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="input-group">
+              <span class="input-group-text" id="basic-addon1">Contraseña:</span>
+              <input type="password" id="contrasena" [(ngModel)]="Usuario.contrasena" formControlName="contrasena" maxlength="72"
+                class="form-control" placeholder="Ejem. usuario@lionrooms.com">
+            </div>
+            <div class="alert alert-danger errorForm" 
+            *ngIf="registroForm.get('contrasena').invalid && registroForm.get('contrasena').touched">
+              <div *ngIf="registroForm.get('contrasena').errors.required" class="errorForm">
+                La contraseña es invalida.
+              </div>
+              <div *ngIf="registroForm.get('contrasena').errors.minlength">
+                La contraseña de minimo debe tener 6 caracteres.
+              </div>
+              <div *ngIf="registroForm.get('contrasena').errors.maxlength">
+                La contraseña a lo máximo debe tener 70 caracteres.
+              </div>
+            </div>
+        </div>
+      </div>
+ 
+      <button type="submit" mat-raised-button color="primary" [disabled]="registroForm.invalid" >Terminar registro</button>
+    </form>
+  </div>

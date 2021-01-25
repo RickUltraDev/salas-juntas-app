@@ -31,8 +31,10 @@ SET @saved_cs_client     = @@character_set_client;
  1 AS `num_asistentes`,
  1 AS `asunto`,
  1 AS `estado`,
+ 1 AS `idUsuario`,
  1 AS `nombre_reserva`,
- 1 AS `nombre_sala`*/;
+ 1 AS `nombre_sala`,
+ 1 AS `idSala`*/;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -57,7 +59,7 @@ CREATE TABLE `reservacion` (
   KEY `fk_reservacion_sala1_idx` (`idSala`),
   CONSTRAINT `fk_reservacion_sala` FOREIGN KEY (`idSala`) REFERENCES `sala` (`idSala`),
   CONSTRAINT `fk_reservacion_usuario` FOREIGN KEY (`idUsuario`) REFERENCES `usuario` (`idUsuario`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -66,7 +68,7 @@ CREATE TABLE `reservacion` (
 
 LOCK TABLES `reservacion` WRITE;
 /*!40000 ALTER TABLE `reservacion` DISABLE KEYS */;
-INSERT INTO `reservacion` VALUES (1,'2021-01-25','08:00:00','11:00:00',4,'Team Meeting','li',1,1);
+INSERT INTO `reservacion` VALUES (1,'2021-01-27','08:00:00','10:00:00',10,'Team Meetings','li',1,1),(3,'2021-01-26','07:30:00','07:48:00',5,'Team meetons','oc',1,2);
 /*!40000 ALTER TABLE `reservacion` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -114,7 +116,7 @@ CREATE TABLE `usuario` (
   `correo` varchar(70) NOT NULL,
   `contrasena` varchar(72) NOT NULL,
   PRIMARY KEY (`idUsuario`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -123,7 +125,7 @@ CREATE TABLE `usuario` (
 
 LOCK TABLES `usuario` WRITE;
 /*!40000 ALTER TABLE `usuario` DISABLE KEYS */;
-INSERT INTO `usuario` VALUES (1,'Ricardo Enrique','Solis','Herrera','rick@gmail.com','\'$2b$10$uMfzArkt2LEfnFRauprj1e5UUztHJLXiwjd7iR6xX1As5cfv.XId6\'');
+INSERT INTO `usuario` VALUES (1,'Ricardo Enrique','Solis','Herrera','rick@gmail.com','\'$2b$10$uMfzArkt2LEfnFRauprj1e5UUztHJLXiwjd7iR6xX1As5cfv.XId6\''),(2,'Pedro','Perez','Montes','pedro@gmail.com','$2b$10$6Dk6ekdq/oXK/AVN.2llKO9Q1zAYi3Sd6OuW8rnKEqdWiNCWNGcM2');
 /*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -148,7 +150,7 @@ UNLOCK TABLES;
 /*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `muestrareservaciones` AS select `r`.`idReservacion` AS `idReservacion`,`r`.`fecha` AS `fecha`,`r`.`hora_inicial` AS `hora_inicial`,`r`.`hora_final` AS `hora_final`,`r`.`num_asistentes` AS `num_asistentes`,`r`.`asunto` AS `asunto`,(case `r`.`estado` when 'li' then 'Libre' when 'oc' then 'Ocupada' end) AS `estado`,concat(`u`.`nombre`,' ',`u`.`ap_paterno`,' ',`u`.`ap_materno`) AS `nombre_reserva`,`s`.`nombre` AS `nombre_sala` from ((`reservacion` `r` join `sala` `s` on((`r`.`idSala` = `s`.`idSala`))) join `usuario` `u` on((`r`.`idUsuario` = `u`.`idUsuario`))) where (`s`.`valido` <> 0) */;
+/*!50001 VIEW `muestrareservaciones` AS select `r`.`idReservacion` AS `idReservacion`,`r`.`fecha` AS `fecha`,`r`.`hora_inicial` AS `hora_inicial`,`r`.`hora_final` AS `hora_final`,`r`.`num_asistentes` AS `num_asistentes`,`r`.`asunto` AS `asunto`,(case `r`.`estado` when 'li' then 'Libre' when 'oc' then 'Ocupada' end) AS `estado`,`u`.`idUsuario` AS `idUsuario`,concat(`u`.`nombre`,' ',`u`.`ap_paterno`,' ',`u`.`ap_materno`) AS `nombre_reserva`,`s`.`nombre` AS `nombre_sala`,`s`.`idSala` AS `idSala` from ((`reservacion` `r` join `sala` `s` on((`r`.`idSala` = `s`.`idSala`))) join `usuario` `u` on((`r`.`idUsuario` = `u`.`idUsuario`))) where (`s`.`valido` <> 0) order by `r`.`fecha` desc,`r`.`hora_inicial` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -162,4 +164,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-01-25  2:15:30
+-- Dump completed on 2021-01-25  7:43:53
